@@ -76,6 +76,20 @@ Deno.serve(async (req) => {
 
     // ACTION: verify_and_vote
     if (action === "verify_and_vote") {
+      // Check if voting is active
+      const { data: activeSessions } = await supabase
+        .from("voting_sessions")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1);
+
+      if (!activeSessions || activeSessions.length === 0) {
+        return new Response(
+          JSON.stringify({ error: "Voting is currently closed" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       if (!phone_number || !otp_code || !contestant_id || !category) {
         return new Response(
           JSON.stringify({ error: "All fields are required" }),
