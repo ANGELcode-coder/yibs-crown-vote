@@ -26,6 +26,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
   const [selectedMiss, setSelectedMiss] = useState<string | null>(null);
   const [selectedMaster, setSelectedMaster] = useState<string | null>(null);
   const [showVerification, setShowVerification] = useState(false);
+  const [votingOpen, setVotingOpen] = useState(true);
   const [votedCategories, setVotedCategories] = useState<{ miss: boolean; master: boolean }>({
     miss: false,
     master: false,
@@ -35,7 +36,17 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
   useEffect(() => {
     fetchContestants();
     fetchResults();
+    checkVotingStatus();
   }, []);
+
+  const checkVotingStatus = async () => {
+    const { data } = await supabase
+      .from("voting_sessions")
+      .select("id")
+      .eq("is_active", true)
+      .limit(1);
+    setVotingOpen(!!data && data.length > 0);
+  };
 
   const fetchContestants = async () => {
     const { data } = await supabase
@@ -186,7 +197,16 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
           </div>
 
           {/* Vote Button */}
-          {!hasVotedCurrent && (
+          {!votingOpen ? (
+            <div className="text-center bg-muted rounded-2xl p-6">
+              <p className="font-display text-xl font-bold text-muted-foreground">
+                🔒 Voting is currently closed
+              </p>
+              <p className="text-muted-foreground font-body text-sm mt-1">
+                Please check back later when voting opens.
+              </p>
+            </div>
+          ) : !hasVotedCurrent ? (
             <div className="text-center">
               <button
                 onClick={handleProceedToVote}
@@ -200,7 +220,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
                 Confirm & Verify Identity
               </button>
             </div>
-          )}
+          ) : null}
         </>
       )}
 
