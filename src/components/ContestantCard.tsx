@@ -61,12 +61,12 @@ const ContestantCard = ({
         <h3 className="font-display text-lg font-bold text-card-foreground mb-1">
           {name}
         </h3>
-        {tagline && (
+        {contact && (
           <p className="text-secondary font-body text-sm font-medium mb-2">
             {tagline}
           </p>
         )}
-        {bio && (
+        {department && (
           <p className="text-muted-foreground font-body text-sm line-clamp-2">
             {bio}
           </p>
