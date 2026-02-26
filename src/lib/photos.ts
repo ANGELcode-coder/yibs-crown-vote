@@ -1,16 +1,16 @@
 import fonkem_randy from "@/assets/fonkem_randy.jpg";
-import maloh_marlvine from "@/assets/WhatsApp Image 2026-02-26 at 02.02.23 (1).jpeg";
-import mambo_annabel from "@/assets/WhatsApp Image 2026-02-26 at 02.02.23.jpeg";
+import maloh_marlvine from "@/assets/maloh_marlvine.jpg";
+import mambo_annabel from "@/assets/mambo_annabel.jpg";
 import vanella from "@/assets/vanella.jpg";
-import ayamba_marilyn from "@/assets/WhatsApp Image 2026-02-26 at 02.02.24 (3).jpeg";
+import ayamba_marilyn from "@/assets/ayamba_marilyn.jpg";
 import kenne_ange from "@/assets/kenne_ange.jpg";
 import djenou_jason from "@/assets/djenou_jason.jpg";
 import arrey_delma from "@/assets/arrey_delma.jpg";
 import enow_che from "@/assets/enow_che.jpg";
-import mekinda_esther from "@/assets/WhatsApp Image 2026-02-26 at 02.02.24 (1).jpeg";
+import mekinda_esther from "@/assets/mekinda_esther.jpg";
 import metala_justin from "@/assets/metala_justin.jpg";
-import essola_bingono_staicy from "@/assets/WhatsApp Image 2026-02-26 at 02.02.24.jpeg";
-import zeal_nyuymengka from "@/assets/WhatsApp Image 2026-02-26 at 02.02.23 (2).jpeg";
+import essola_bingono_staicy from "@/assets/essola_bingono_staicy.jpg";
+import zeal_nyuymengka from "@/assets/zeal_nyuymengka.jpg";
 
 // Map contestant names to local photos
 const photoMap: Record<string, string> = {
