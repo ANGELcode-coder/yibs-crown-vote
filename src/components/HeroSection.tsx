@@ -36,12 +36,12 @@ const HeroSection = ({ onVoteClick }: HeroSectionProps) => {
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-primary-foreground mb-4 leading-tight">
-          Miss & Master{" "}
+          Miss & Mister{" "}
           <span className="text-gradient-gold">YIBS 2026</span>
         </h1>
 
         <p className="text-primary-foreground/80 font-body text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-          Cast your vote for the next Miss and Master of Yaoundé International
+          Cast your vote for the next Miss and Mister Yaoundé International
           Business School. Every vote counts!
         </p>
 
