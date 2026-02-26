@@ -1,34 +1,45 @@
-import fonkem_randy from "@/assets/fonkem_randy.jpg";
-import maloh_marlvine from "@/assets/maloh_marlvine.jpg";
-import mambo_annabel from "@/assets/mambo_annabel.jpg";
-import vanella from "@/assets/vanella.jpg";
-import ayamba_marilyn from "@/assets/ayamba_marilyn.jpg";
-import kenne_ange from "@/assets/kenne_ange.jpg";
-import djenou_jason from "@/assets/djenou_jason.jpg";
-import arrey_delma from "@/assets/arrey_delma.jpg";
-import enow_che from "@/assets/enow_che.jpg";
-import mekinda_esther from "@/assets/mekinda_esther.jpg";
-import metala_justin from "@/assets/metala_justin.jpg";
-import essola_bingono_staicy from "@/assets/essola_bingono_staicy.jpg";
-import zeal_nyuymengka from "@/assets/zeal_nyuymengka.jpg";
+// Import new contestant photos with descriptive names
+import mamboAnnabelAwah from "@/assets/Mambo Annabel Awah.jpeg";
+import chuhmboiVanella from "@/assets/Chuhmboin Vanella.jpeg";
+import ayambaMarilyn from "@/assets/Ayamba Marilyn Ojong.jpg";
+import kenneAnge from "@/assets/Kenne Ange.jpeg";
+import arreyDelmaEteng from "@/assets/Arrey Delma Eteng.jpeg";
+import enowChePrecious from "@/assets/Enow Che Precious.jpg";
+import mekindaEsther from "@/assets/Mekinda Esther.jpeg";
+import essolaBingonoStaicy from "@/assets/Essola Bingono Staicy.jpeg";
+import yikoniNyuymengka from "@/assets/Yikoni Nyuymengka.jpeg";
+import fonkemRandy from "@/assets/Fonkem Randy.jpg";
+import malohMalvineJoy from "@/assets/Maloh Malvine-Joy.jpeg";
+import djenouJason from "@/assets/Djenou Jason Muluh Afeseh.jpg";
+import metalajustinAngel from "@/assets/Metala Justin Angel.jpg";
 
-// Map contestant names to local photos
+// Map contestant names to their corresponding photos
+// This ensures the correct image displays for each contestant on both the voting and admin pages
 const photoMap: Record<string, string> = {
-  "Fonkem Randy": fonkem_randy,
-  "Maloh Malvine-Joy": maloh_marlvine,
-  "Mambo Annabel Awah": mambo_annabel,
-  "Chuhmboin Vanella": vanella,
-  "Ayamba Marilyn Ojong": ayamba_marilyn,
-  "Kenne Ange": kenne_ange,
-  "Djenou Jason Muluh Afeseh": djenou_jason,
-  "Arrey Delma Eteng": arrey_delma,
-  "Enow Che Precious": enow_che,
-  "Mekinda Esther": mekinda_esther,
-  "Metala Justin Angel": metala_justin,
-  "Essola Bingono Staicy": essola_bingono_staicy,
-  "Yikoni Nyuymengka": zeal_nyuymengka,
+  // Miss YIBS Category
+  "Mambo Annabel Awah": mamboAnnabelAwah,
+  "Chuhmboin Vanella": chuhmboiVanella,
+  "Ayamba Marilyn Ojong": ayambaMarilyn,
+  "Kenne Ange": kenneAnge,
+  "Arrey Delma Eteng": arreyDelmaEteng,
+  "Enow Che Precious": enowChePrecious,
+  "Mekinda Esther": mekindaEsther,
+  "Essola Bingono Staicy": essolaBingonoStaicy,
+  "Yikoni Nyuymengka": yikoniNyuymengka,
+  
+  // Master YIBS Category
+  "Fonkem Randy": fonkemRandy,
+  "Maloh Malvine-Joy": malohMalvineJoy,
+  "Djenou Jason Muluh Afeseh": djenouJason,
+  "Metala Justin Angel": metalajustinAngel,
 };
 
+/**
+ * Retrieves the photo URL for a contestant by their name
+ * @param name - The contestant's full name
+ * @param fallback - Optional fallback URL if the name is not found in the map
+ * @returns The photo URL for the contestant, or a placeholder if not found
+ */
 export const getContestantPhoto = (name: string, fallback?: string | null): string => {
   return photoMap[name] || fallback || "/placeholder.svg";
 };

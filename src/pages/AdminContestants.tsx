@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Pencil, Trash2, Crown, Users, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getContestantPhoto } from "@/lib/photos";
 
 interface Contestant {
   id: string;
@@ -158,6 +159,7 @@ const AdminContestants = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-border">
+                      <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Photo</th>
                       <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Name</th>
                       <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Tagline</th>
                       <th className="text-right px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Actions</th>
@@ -166,6 +168,13 @@ const AdminContestants = () => {
                   <tbody>
                     {missContestants.map((c) => (
                       <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <img 
+                            src={getContestantPhoto(c.name, c.photo_url)} 
+                            alt={c.name} 
+                            className="w-10 h-10 rounded-full object-cover border border-border"
+                          />
+                        </td>
                         <td className="px-6 py-4 font-body font-medium text-card-foreground">{c.name}</td>
                         <td className="px-6 py-4 font-body text-sm text-muted-foreground">{c.tagline || "—"}</td>
                         <td className="px-6 py-4 text-right">
@@ -201,6 +210,7 @@ const AdminContestants = () => {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-border">
+                      <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Photo</th>
                       <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Name</th>
                       <th className="text-left px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Tagline</th>
                       <th className="text-right px-6 py-3 font-body text-sm font-semibold text-muted-foreground">Actions</th>
@@ -209,6 +219,13 @@ const AdminContestants = () => {
                   <tbody>
                     {masterContestants.map((c) => (
                       <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <img 
+                            src={getContestantPhoto(c.name, c.photo_url)} 
+                            alt={c.name} 
+                            className="w-10 h-10 rounded-full object-cover border border-border"
+                          />
+                        </td>
                         <td className="px-6 py-4 font-body font-medium text-card-foreground">{c.name}</td>
                         <td className="px-6 py-4 font-body text-sm text-muted-foreground">{c.tagline || "—"}</td>
                         <td className="px-6 py-4 text-right">
