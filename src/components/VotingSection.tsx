@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import ContestantCard from "./ContestantCard";
-import { getContestantPhoto } from "@/lib/photos";
 import PhoneVerification from "./PhoneVerification";
 import { Crown, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -184,7 +183,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
                 <ContestantCard
                   id={c.id}
                   name={c.name}
-                  photoUrl={getContestantPhoto(c.name, c.photo_url)}
+                  photoUrl={c.photo_url || "/placeholder.svg"}
                   bio={c.bio || undefined}
                   tagline={c.tagline || undefined}
                   voteCount={voteCounts[c.id] || 0}
