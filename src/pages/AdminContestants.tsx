@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Pencil, Trash2, Crown, Users, Loader2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Crown, Users, Loader2, X, Upload, Image } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Contestant {
@@ -24,7 +24,11 @@ const AdminContestants = () => {
     tagline: "",
     photo_url: "",
   });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -45,6 +49,8 @@ const AdminContestants = () => {
   const openCreate = () => {
     setEditing(null);
     setForm({ name: "", category: "miss", bio: "", tagline: "", photo_url: "" });
+    setPhotoFile(null);
+    setPhotoPreview(null);
     setShowForm(true);
   };
 
@@ -57,7 +63,42 @@ const AdminContestants = () => {
       tagline: c.tagline || "",
       photo_url: c.photo_url || "",
     });
+    setPhotoFile(null);
+    setPhotoPreview(c.photo_url || null);
     setShowForm(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Please select an image file", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Image must be under 5MB", variant: "destructive" });
+      return;
+    }
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const uploadPhoto = async (file: File): Promise<string | null> => {
+    const ext = file.name.split(".").pop();
+    const fileName = `${crypto.randomUUID()}.${ext}`;
+    const filePath = `contestants/${fileName}`;
+
+    setUploading(true);
+    const { error } = await supabase.storage.from("photos").upload(filePath, file);
+    setUploading(false);
+
+    if (error) {
+      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
+      return null;
+    }
+
+    const { data: urlData } = supabase.storage.from("photos").getPublicUrl(filePath);
+    return urlData.publicUrl;
   };
 
   const handleSave = async () => {
@@ -67,6 +108,18 @@ const AdminContestants = () => {
     }
 
     setSaving(true);
+
+    // Upload photo if a file was selected
+    let photoUrl = form.photo_url.trim() || null;
+    if (photoFile) {
+      const uploaded = await uploadPhoto(photoFile);
+      if (!uploaded) {
+        setSaving(false);
+        return;
+      }
+      photoUrl = uploaded;
+    }
+
     if (editing) {
       const { error } = await supabase
         .from("contestants")
@@ -75,7 +128,7 @@ const AdminContestants = () => {
           category: form.category,
           bio: form.bio.trim() || null,
           tagline: form.tagline.trim() || null,
-          photo_url: form.photo_url.trim() || null,
+          photo_url: photoUrl,
         })
         .eq("id", editing.id);
 
@@ -90,7 +143,7 @@ const AdminContestants = () => {
         category: form.category,
         bio: form.bio.trim() || null,
         tagline: form.tagline.trim() || null,
-        photo_url: form.photo_url.trim() || null,
+        photo_url: photoUrl,
       });
 
       if (error) {
@@ -284,11 +337,39 @@ const AdminContestants = () => {
                 />
               </div>
               <div>
-                <label className="font-body text-sm font-medium text-card-foreground mb-1 block">Photo URL</label>
+                <label className="font-body text-sm font-medium text-card-foreground mb-2 block">Photo</label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                {photoPreview ? (
+                  <div className="relative w-full aspect-[3/4] max-h-48 rounded-xl overflow-hidden border border-border mb-2">
+                    <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => { setPhotoFile(null); setPhotoPreview(null); setForm({ ...form, photo_url: "" }); }}
+                      className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-dashed border-border bg-muted/30 text-muted-foreground hover:border-primary hover:text-primary transition-colors font-body"
+                >
+                  <Upload className="w-5 h-5" />
+                  {photoPreview ? "Change Photo" : "Upload Photo"}
+                </button>
+                <p className="text-xs text-muted-foreground mt-1 font-body">Or paste an image URL:</p>
                 <input
                   value={form.photo_url}
-                  onChange={(e) => setForm({ ...form, photo_url: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  onChange={(e) => { setForm({ ...form, photo_url: e.target.value }); if (e.target.value) { setPhotoFile(null); setPhotoPreview(e.target.value); } }}
+                  className="w-full px-4 py-2 rounded-xl border border-input bg-background font-body text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring mt-1"
                   placeholder="https://..."
                 />
               </div>
