@@ -9,7 +9,7 @@ const Footer = () => {
           © 2026 Yaoundé International Business School. All rights reserved.
         </p>
         <p className="text-primary-foreground/40 font-body text-xs">
-          Miss & Master YIBS 2026 — Official Voting Platform
+          Miss & Mister YIBS 2026 — Official Voting Platform
         </p>
       </div>
     </footer>
