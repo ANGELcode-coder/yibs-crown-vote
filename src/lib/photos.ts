@@ -1,5 +1,5 @@
 import fonkem_randy from "@/assets/fonkem_randy.jpg";
-import maloh_marlvine from "@/assets/src/assets/WhatsApp Image 2026-02-26 at 02.02.23 (1).jpeg";
+import WhatsApp Image 2026-02-26 at 02.02.23 (1).jpeg from "@/assets/src/assets/WhatsApp Image 2026-02-26 at 02.02.23 (1).jpeg";
 import mambo_annabel from "@/assets/src/assets/WhatsApp Image 2026-02-26 at 02.02.23.jpeg";
 import vanella from "@/assets/vanella.jpg";
 import ayamba_marilyn from "@/assets/src/assets/WhatsApp Image 2026-02-26 at 02.02.24 (3).jpeg";
@@ -15,7 +15,7 @@ import zeal_nyuymengka from "@/assets/src/assets/WhatsApp Image 2026-02-26 at 02
 // Map contestant names to local photos
 const photoMap: Record<string, string> = {
   "Fonkem Randy": fonkem_randy,
-  "Maloh Malvine-Joy": maloh_marlvine,
+  "Maloh Malvine-Joy": WhatsApp Image 2026-02-26 at 02.02.23 (1).jpeg,
   "Mambo Annabel Awah": mambo_annabel,
   "Chuhmboin Vanella": vanella,
   "Ayamba Marilyn Ojong": ayamba_marilyn,
