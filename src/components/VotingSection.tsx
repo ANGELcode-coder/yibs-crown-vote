@@ -216,7 +216,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
             }`}
           >
             <Users className="w-4 h-4" />
-            Master YIBS
+            Mister YIBS
             {votedCategories.master && (
               <span className="ml-1 text-xs bg-secondary text-secondary-foreground rounded-full px-2 py-0.5">
                 Voted ✓
