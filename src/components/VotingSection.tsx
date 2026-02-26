@@ -33,12 +33,46 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
   });
   const { toast } = useToast();
 
+  // Subscribe to real-time contestant updates
   useEffect(() => {
     fetchContestants();
     fetchResults();
     checkVotingStatus();
+
+    // Set up real-time subscription for contestants table
+    // This ensures new contestants added by admins appear immediately
+    const subscription = supabase
+      .channel('contestants-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen for INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'contestants',
+        },
+        (payload) => {
+          // Refetch contestants whenever the table changes
+          fetchContestants();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
+  // Separate effect to poll for vote updates every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchResults();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Check if voting is currently active
   const checkVotingStatus = async () => {
     const { data } = await supabase
       .from("voting_sessions")
@@ -48,6 +82,30 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
     setVotingOpen(!!data && data.length > 0);
   };
 
+  // Subscribe to voting session status changes
+  useEffect(() => {
+    const subscription = supabase
+      .channel('voting-sessions-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'voting_sessions',
+        },
+        () => {
+          // Recheck voting status when sessions change
+          checkVotingStatus();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Fetch all contestants from the database
   const fetchContestants = async () => {
     const { data } = await supabase
       .from("contestants")
@@ -56,6 +114,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
     if (data) setContestants(data as Contestant[]);
   };
 
+  // Fetch current vote counts for all contestants
   const fetchResults = async () => {
     const { data } = await supabase.functions.invoke("vote", {
       body: { action: "get_results" },
@@ -63,7 +122,9 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
     if (data?.results) setVoteCounts(data.results);
   };
 
+  // Get the currently selected contestant for the active category
   const currentSelection = activeTab === "miss" ? selectedMiss : selectedMaster;
+  // Check if user has already voted in the current category
   const hasVotedCurrent = activeTab === "miss" ? votedCategories.miss : votedCategories.master;
 
   const handleSelect = (id: string) => {
@@ -112,6 +173,7 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
       });
   };
 
+  // Filter contestants by the currently active category (miss or master)
   const filtered = contestants.filter((c) => c.category === activeTab);
 
   return (
@@ -164,12 +226,12 @@ const VotingSection = ({ sectionRef }: VoteSectionProps) => {
         </div>
       </div>
 
-      {/* Contestants Grid */}
+      {/* Contestants Grid - displays all contestants in the active category */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20">
+          <div className="text-center py-20">
           <Crown className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
           <p className="text-muted-foreground font-body text-lg">
-            No contestants registered yet in the {activeTab} category.
+            No contestants registered yet in the {activeTab} category. Check back soon!
           </p>
         </div>
       ) : (
